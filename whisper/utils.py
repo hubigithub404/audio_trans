@@ -202,4 +202,11 @@ def get_writer(output_format: str, output_dir: str) -> Callable[[dict, TextIO], 
 
         return write_all
 
-    return writers[output_format](output_dir)
+    writer_funcs = []
+    for format in output_format.split(','):
+        if format in writers:
+            writer_funcs.append(writers[format])
+        else:
+            raise ValueError(f"Output format '{format}' is not supported.")
+
+    return lambda result, file: [writer(output_dir)(result, file) for writer in writer_funcs]
