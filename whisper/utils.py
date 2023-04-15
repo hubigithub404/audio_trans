@@ -262,4 +262,4 @@ def get_writer(
         else:
             raise ValueError(f"Output format '{format}' is not supported.")
 
-    return lambda result, file: [writer(output_dir)(result, file) for writer in writer_funcs]
+    return lambda result, file, options: [writer(output_dir)(result, file, options) for writer in writer_funcs]
