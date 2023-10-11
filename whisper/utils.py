@@ -255,4 +255,11 @@ def get_writer(
 
         return write_all
 
-    return writers[output_format](output_dir)
+    writer_funcs = []
+    for format in output_format.split(','):
+        if format in writers:
+            writer_funcs.append(writers[format])
+        else:
+            raise ValueError(f"Output format '{format}' is not supported.")
+
+    return lambda result, file, options: [writer(output_dir)(result, file, options) for writer in writer_funcs]
